@@ -1,9 +1,43 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import type { NextPage } from "next";
+import Head from "next/head";
+import { useState } from "react";
+import styles from "../styles/Home.module.css";
+import { db } from "../libs/firebase";
+import { collection, doc, setDoc } from "firebase/firestore";
+
+type News = {
+  content: string;
+  createdBy: string;
+  createdAt: Date;
+};
 
 const Home: NextPage = () => {
+  const [content, setContent] = useState("");
+  const [createdBy, setCreatedBy] = useState("kawa");
+
+  const postNews = async () => {
+    try {
+      const news: News = {
+        content,
+        createdBy,
+        createdAt: new Date(),
+      };
+      const ref = doc(collection(db, 'colNews'))
+      await setDoc(ref, news)
+      alert("近況を登録しました！");
+    } catch (err: any) {
+      console.log(err);
+    }
+  };
+
+  const handleChange = (e: any) => {
+    setContent(e.target.value);
+  };
+
+  const handleChangeSelect = (e: any) => {
+    setCreatedBy(e.target.value);
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,60 +47,27 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        <h1 className={styles.title}>近況教えて！</h1>
+        <textarea
+          className={styles.description}
+          cols={20} rows={5}
+          onBlur={handleChange}
+        ></textarea>
+        <select
+          className={styles.card}
+          onChange={handleChangeSelect}
+        >
+          <option value="kawa">川元</option>
+          <option value="baba">馬場</option>
+          <option value="rai">雷鳥</option>
+          <option value="suzu">鈴木</option>
+        </select>
+        <button onClick={postNews}>近況を登録！</button>
       </main>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+      <footer className={styles.footer}></footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
