@@ -13,7 +13,7 @@ type News = {
 
 const Home: NextPage = () => {
   const [content, setContent] = useState("");
-  const [createdBy, setCreatedBy] = useState("kawa");
+  const [createdBy, setCreatedBy] = useState("川元");
 
   const postNews = async () => {
     try {
@@ -57,10 +57,10 @@ const Home: NextPage = () => {
           className={styles.card}
           onChange={handleChangeSelect}
         >
-          <option value="kawa">川元</option>
-          <option value="baba">馬場</option>
-          <option value="rai">雷鳥</option>
-          <option value="suzu">鈴木</option>
+          <option value="川元">川元</option>
+          <option value="馬場">馬場</option>
+          <option value="雷鳥">雷鳥</option>
+          <option value="鈴木">鈴木</option>
         </select>
         <button onClick={postNews}>近況を登録！</button>
       </main>
