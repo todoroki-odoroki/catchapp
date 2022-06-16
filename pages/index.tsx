@@ -47,7 +47,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>近況教えて！！</h1>
+        <h1 className={styles.title}>近況教えて！</h1>
         <textarea
           className={styles.description}
           cols={20} rows={5}
