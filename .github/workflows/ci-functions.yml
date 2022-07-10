@@ -6,7 +6,6 @@ on:
       - functions/**
       - .github/workflows/ci-functions.yml
   pull_request:
-    types: [opened]
     paths:
       - functions/**
       - .github/workflows/ci-functions.yml

@@ -7,7 +7,6 @@ on:
       - .github/workflows/ci-functions.yml
       - .github/workflows/deploy-functions.yml
   pull_request:
-    types: [opened]
     paths-ignore:
       - functions/**
       - .github/workflows/ci-functions.yml
