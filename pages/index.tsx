@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import React, { useState } from "react";
 import styles from "../styles/Home.module.css";
 import { db } from "../libs/firebase";
 import { collection, doc, setDoc } from "firebase/firestore";
@@ -25,16 +25,16 @@ const Home: NextPage = () => {
       const ref = doc(collection(db, 'colNews'))
       await setDoc(ref, news)
       alert("近況を登録しました！");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.log(err);
     }
   };
 
-  const handleChange = (e: any) => {
-    setContent(e.target.value);
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.currentTarget.value);
   };
 
-  const handleChangeSelect = (e: any) => {
+  const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCreatedBy(e.target.value);
   };
 
