@@ -63,7 +63,7 @@ const Home: NextPage = () => {
           <option value="雷鳥">雷鳥</option>
           <option value="鈴木">鈴木</option>
         </select>
-        <button onClick={postNews}>近況を登録！！</button>
+        <button onClick={postNews}>近況を登録！！！</button>
       </main>
 
       <footer className={styles.footer}></footer>
