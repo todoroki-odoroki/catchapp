@@ -1,4 +1,4 @@
-name: Deploy Web to Firebase Hosting
+name: Deploy Functions to Firebase Hosting
 on:
   workflow_run:
     workflows: ["ci-functions"]
