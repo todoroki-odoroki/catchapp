@@ -1,7 +1,7 @@
 name: Deploy Functions to Firebase Hosting
 on:
   workflow_run:
-    workflows: ["ci-functions"]
+    workflows: ["CI Functions"]
     types: ["completed"]
     branchs: ["main"]
 jobs:
