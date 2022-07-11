@@ -25,6 +25,7 @@ const Home: NextPage = () => {
       const ref = doc(collection(db, 'colNews'))
       await setDoc(ref, news)
       alert("近況を登録しました！");
+      setContent("");
     } catch (err: unknown) {
       console.log(err);
     }
