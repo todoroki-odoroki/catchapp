@@ -36,6 +36,8 @@ jobs:
 
       - name: Lint
         run: yarn lint
+        with:
+          working-directory: web
 
       # - name: Test
       #   run: yarn test --ci --coverage --maxWorkers=2
