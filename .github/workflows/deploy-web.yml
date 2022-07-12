@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./web
+        working-directory: web
     steps:
       - uses: actions/checkout@v2
       - run: yarn && yarn build && yarn export
@@ -19,3 +19,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CATCHAPP_ED8DD }}'
           channelId: live
           projectId: catchapp-ed8dd
+           working-directory: web
