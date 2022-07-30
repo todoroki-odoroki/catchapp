@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import styles from '../styles/Home.module.css'
 import { db } from '../libs/firebase'
 import { collection, doc, setDoc } from 'firebase/firestore'
+import { Button, Center, Spinner } from '@chakra-ui/react'
 
 type News = {
   content: string
@@ -14,8 +15,10 @@ type News = {
 const Home: NextPage = () => {
   const [content, setContent] = useState('')
   const [createdBy, setCreatedBy] = useState('川元')
+  const [isLoading, setLoading] = useState(true);
 
   const postNews = async () => {
+    setLoading(true)
     try {
       const news: News = {
         content,
@@ -28,6 +31,8 @@ const Home: NextPage = () => {
       setContent('')
     } catch (err: unknown) {
       console.log(err)
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -40,6 +45,10 @@ const Home: NextPage = () => {
   }
 
   return (
+    isLoading ? <Center>
+      <Spinner/>
+      </Center>
+      :
     <div className={styles.container}>
       <Head>
         <title>Catch App</title>
@@ -61,7 +70,8 @@ const Home: NextPage = () => {
           <option value='雷鳥'>雷鳥</option>
           <option value='鈴木'>鈴木</option>
         </select>
-        <button onClick={postNews}>近況を登録！！</button>
+        <Button onClick={postNews}>近況を登録！！</Button>
+        {/* <button onClick={postNews}>近況を登録！！</button> */}
       </main>
 
       <footer className={styles.footer}></footer>
