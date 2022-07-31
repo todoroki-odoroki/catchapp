@@ -30,6 +30,6 @@ jobs:
       - name: deploy firebase functions
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only hosting
+          args: deploy --only functions
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CATCHAPP_ED8DD }}
