@@ -1,4 +1,4 @@
 export type LineConfig = {
-  channelAccessToken: string,
-  channelSecret: string,
-}
+  channelAccessToken: string;
+  channelSecret: string;
+};
