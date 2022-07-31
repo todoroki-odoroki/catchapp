@@ -71,12 +71,20 @@ const Home: NextPage = () => {
     const assetsRef = ref(storage, `${ASSET_FOLDER_NAME}/${fileName}`)
 
     try{
-      await uploadBytes(assetsRef, file, metaData);
+      const data = await uploadBytes(assetsRef, file, metaData);
+      const fileData = {
+        createdBy: createdBy,
+        createdAt: data.metadata.timeCreated,
+        mineType: data.metadata.contentType,
+        url: data.metadata.fullPath
+      }
+      const ref = doc(collection(db, 'files'))
+      await setDoc(ref, fileData)
       toast({title: "ファイルアップデート成功", status: "success", duration: 3000, isClosable: true})
     }catch{
       toast({title: "Failed to upload file", status: "error", duration: 3000, isClosable:true })
     }
-  }, [storage, toast])
+  }, [createdBy, storage, toast])
 
   return isLoading ? (
     <Center>
