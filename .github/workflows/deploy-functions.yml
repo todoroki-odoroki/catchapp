@@ -6,16 +6,30 @@ on:
     branchs: ["main"]
 jobs:
   build_and_deploy:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         working-directory: functions
+    strategy:
+      matrix:
+        node: ["16.x"]
+        os: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v2
-      - run: yarn && yarn build && yarn export
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Use Node ${{ matrix.node }}
+        uses: actions/setup-node@v3
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CATCHAPP_ED8DD }}'
-          channelId: live
-          projectId: catchapp-ed8dd
+          node-version: ${{ matrix.node }}
+
+      - name: Install deps and build (with cache)
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: functions
+      - name: deploy firebase functions
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CATCHAPP_ED8DD }}
