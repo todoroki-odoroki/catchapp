@@ -5,11 +5,11 @@ import styles from '../styles/Home.module.css'
 import { db } from '../libs/firebase'
 import { collection, doc, setDoc } from 'firebase/firestore'
 import { getStorage, ref, uploadBytes } from "firebase/storage"
-import { Box, Button, Center, IconButton, Spinner, useToast } from '@chakra-ui/react'
+import { Box, Button, Center, Flex, IconButton, Spinner, Tooltip, useToast } from '@chakra-ui/react'
 import FileInput from '../components/file-input'
 import { getRandomStr } from '../libs/random'
 import TextArea from '../components/textarea'
-import { AddIcon } from '@chakra-ui/icons'
+import { AddIcon, CopyIcon } from '@chakra-ui/icons'
 
 const ASSET_FOLDER_NAME = "assets"
 
@@ -58,6 +58,8 @@ const Home: NextPage = () => {
 
   const getChangeFunc = (i: number) => {
     return (val: string) => {
+      console.log("called ---", i);
+      console.log("val", val);
       setContents((old)=> old.map((c, index) => (index === i ? val : c)))
     }
   }
@@ -65,6 +67,15 @@ const Home: NextPage = () => {
   const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCreatedBy(e.target.value)
   }
+
+  const getPasteClipboardFunc = (i: number) => {
+    return async() => {
+    const text = await navigator.clipboard.readText()
+    console.log(text);
+    const changeFunc = getChangeFunc(i)
+    changeFunc(text)
+  }
+}
 
   const handleUploadFile = useCallback(async(file: File) => {
     const randomStr = getRandomStr();
@@ -110,12 +121,19 @@ const Home: NextPage = () => {
           contents.map((c, i) => {
             return (
               <Box key={i} m={3}>
-                <TextArea  onChange={getChangeFunc(i)}/>
+                <Flex justifyContent="center" gap={5} alignItems="center">
+                <TextArea  onChange={getChangeFunc(i)} value={contents[i]}/>
+                <Tooltip label="クリップボードからコピー">
+                <IconButton aria-label="paste clipboard" icon={<CopyIcon/>} onClick={getPasteClipboardFunc(i)}/>
+                </Tooltip>
+                </Flex>
                 </Box>)
           })
         }
         </Box>
+                <Tooltip label="新規コンテンツ">
         <IconButton aria-label='add textarea' icon={<AddIcon/>} onClick={addContent}/>
+                </Tooltip>
         <select className={styles.card} onChange={handleChangeSelect}>
           <option value='川元'>川元</option>
           <option value='馬場'>馬場</option>
@@ -123,7 +141,9 @@ const Home: NextPage = () => {
           <option value='鈴木'>鈴木</option>
         </select>
         <Button onClick={postNews}>近況を登録！！</Button>
+        <Box m={3}>
         <FileInput onSend={handleUploadFile}/>
+        </Box>
       </main>
       <footer className={styles.footer}></footer>
     </div>
