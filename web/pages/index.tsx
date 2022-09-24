@@ -3,7 +3,7 @@ import Head from 'next/head'
 import React, { useCallback, useState } from 'react'
 import styles from '../styles/Home.module.css'
 import { db } from '../libs/firebase'
-import { collection, doc, setDoc } from 'firebase/firestore'
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
 import { getStorage, ref, uploadBytes } from "firebase/storage"
 import { Box, Button, Center, Flex, IconButton, Spinner, Tooltip, useToast } from '@chakra-ui/react'
 import FileInput from '../components/file-input'
@@ -35,8 +35,8 @@ const Home: NextPage = () => {
     setLoading(true)
     try {
       const news: News[] = contents.map(c => ({content: c, createdBy, createdAt: new Date()}))
-      const ref = doc(collection(db, 'colNews'))
-      await Promise.all([news.map(async (n:News) => await setDoc(ref, n))])
+      const colRef = collection(db, 'colNews')
+      await Promise.all([news.map(async (n:News) => await addDoc(colRef, n))])
       toast({
         title: "近況を登録しました！",
         status: "success",
@@ -58,8 +58,6 @@ const Home: NextPage = () => {
 
   const getChangeFunc = (i: number) => {
     return (val: string) => {
-      console.log("called ---", i);
-      console.log("val", val);
       setContents((old)=> old.map((c, index) => (index === i ? val : c)))
     }
   }
@@ -71,7 +69,6 @@ const Home: NextPage = () => {
   const getPasteClipboardFunc = (i: number) => {
     return async() => {
     const text = await navigator.clipboard.readText()
-    console.log(text);
     const changeFunc = getChangeFunc(i)
     changeFunc(text)
   }
