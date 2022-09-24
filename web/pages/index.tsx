@@ -5,9 +5,11 @@ import styles from '../styles/Home.module.css'
 import { db } from '../libs/firebase'
 import { collection, doc, setDoc } from 'firebase/firestore'
 import { getStorage, ref, uploadBytes } from "firebase/storage"
-import { Button, Center, Spinner, useToast } from '@chakra-ui/react'
+import { Box, Button, Center, IconButton, Spinner, useToast } from '@chakra-ui/react'
 import FileInput from '../components/file-input'
 import { getRandomStr } from '../libs/random'
+import TextArea from '../components/textarea'
+import { AddIcon } from '@chakra-ui/icons'
 
 const ASSET_FOLDER_NAME = "assets"
 
@@ -18,29 +20,30 @@ type News = {
 }
 
 const Home: NextPage = () => {
-  const [content, setContent] = useState('')
+  const [contents, setContents] = useState<string[]>([""])
   const [createdBy, setCreatedBy] = useState('川元')
   const [isLoading, setLoading] = useState(false)
   const storage = getStorage();
   const toast = useToast()
 
+  const addContent = useCallback(() => {
+    setContents(old => [...old, ''])
+  }, [])
+
+
   const postNews = async () => {
     setLoading(true)
     try {
-      const news: News = {
-        content,
-        createdBy,
-        createdAt: new Date(),
-      }
+      const news: News[] = contents.map(c => ({content: c, createdBy, createdAt: new Date()}))
       const ref = doc(collection(db, 'colNews'))
-      await setDoc(ref, news)
+      await Promise.all([news.map(async (n:News) => await setDoc(ref, n))])
       toast({
         title: "近況を登録しました！",
         status: "success",
         duration:3000,
         isClosable: true
       })
-      setContent('')
+      setContents([''])
     } catch (err: unknown) {
       toast({
         title: "エラーが発生しました",
@@ -53,8 +56,10 @@ const Home: NextPage = () => {
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.currentTarget.value)
+  const getChangeFunc = (i: number) => {
+    return (val: string) => {
+      setContents((old)=> old.map((c, index) => (index === i ? val : c)))
+    }
   }
 
   const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -100,12 +105,17 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>近況教えて！</h1>
-        <textarea
-          className={styles.description}
-          cols={20}
-          rows={5}
-          onBlur={handleChange}
-        ></textarea>
+        <Box >
+        {
+          contents.map((c, i) => {
+            return (
+              <Box key={i} m={3}>
+                <TextArea  onChange={getChangeFunc(i)}/>
+                </Box>)
+          })
+        }
+        </Box>
+        <IconButton aria-label='add textarea' icon={<AddIcon/>} onClick={addContent}/>
         <select className={styles.card} onChange={handleChangeSelect}>
           <option value='川元'>川元</option>
           <option value='馬場'>馬場</option>

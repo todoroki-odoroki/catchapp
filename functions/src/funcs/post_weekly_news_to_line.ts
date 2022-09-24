@@ -16,7 +16,9 @@ const db = admin.firestore();
 // Initialize LINE
 const lineConfig: LineConfig = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN ?? "",
-  channelSecret: process.env.CHANNEL_SECRET ?? "",
+  channelSecret: process.env.CHANNEL_ACCESS_TOKEN ?? "",
+  // channelAccessToken: functions.config().line_config.channel_access_token ?? "",
+  // channelSecret: functions.config().line_config.channel_secret ?? "",
 };
 const client = new line.Client(lineConfig);
 
@@ -30,7 +32,6 @@ export const postWeeklyNewsToLine = functions.pubsub
   .schedule("every Friday 18:00")
   .timeZone("Asia/Tokyo")
   .onRun(async () => {
-    console.log("processed");
 
     const today = new Date();
     const oneWeekBefore = new Date();
@@ -46,7 +47,6 @@ export const postWeeklyNewsToLine = functions.pubsub
     const title = "📨 近況報告!\n";
     const period = `【${year}年${monthFrom}月${dayFrom}日〜${monthTo}月${dayTo}日】`;
     content += title + period + "\n";
-    console.log(today, oneWeekBefore, content);
 
     await db
       .collection("colNews")
