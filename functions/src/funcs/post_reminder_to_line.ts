@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 import * as line from "@line/bot-sdk";
 import { Message } from "@line/bot-sdk";
 import { LineConfig } from "../types";
-import * as axios from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 
 // Initialize LINE
 const lineConfig: LineConfig = {
@@ -24,15 +24,22 @@ export const postReminderToLine = functions.pubsub
 
     let content = "";
     const title = "近況登録リマインド📢\n明日の18:00までに登録してね！";
-    const webUrl = "https://catchapp-ed8dd.web.app/\n"
-    content += title + webUrl;
+    const webAppUrl = "https://catchapp-ed8dd.web.app/\n"
+    content += title + webAppUrl;
 
-    await axios.get("https://meigen.doodlenote.net/api/json.php?c=1&e=1")
-    .then(response=>{
-      const wordOfWeek = `\n~今週の名言~\n“${response.data[0].meigen}”\n${response.data[0].author}`;
+    const url = "https://meigen.doodlenote.net/api/json.php?c=1&e=1"
+    const options: AxiosRequestConfig = {
+      url: `${url}/users`,
+      method: "GET",
+    };
+
+    await axios(options)
+    .then((res: AxiosResponse)=>{
+      const { data } = res
+      const wordOfWeek = `\n~今週の名言~\n“${data[0].meigen}”\n${data[0].author}`;
       content += wordOfWeek;
       postText(destId, content);
-  }).catch((e) => console.error(e));
+  }).catch((e: AxiosError<{ error: string }>) => console.error(e));
 
     return null;
   });
