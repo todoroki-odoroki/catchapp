@@ -7,7 +7,11 @@ import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 // Initialize LINE
 const lineConfig: LineConfig = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN ?? "",
-  channelSecret: process.env.CHANNEL_ACCESS_TOKEN ?? "",
+  channelSecret: process.env.CHANNEL_SECRET ?? "",
+
+  // 手動デプロイ用
+  // channelAccessToken: functions.config().line_config.channel_access_token ?? "",
+  // channelSecret: functions.config().line_config.channel_secret ?? "",
 };
 const client = new line.Client(lineConfig);
 
@@ -23,7 +27,7 @@ export const postReminderToLine = functions.pubsub
   .onRun(async () => {
 
     let content = "";
-    const title = "近況登録リマインド📢\n明日の18:00までに登録してね！";
+    const title = "近況登録リマインド📢\n明日の18:00までに登録してね！\n";
     const webAppUrl = "https://catchapp-ed8dd.web.app/\n"
     content += title + webAppUrl;
 
@@ -36,7 +40,7 @@ export const postReminderToLine = functions.pubsub
     await axios(options)
     .then((res: AxiosResponse)=>{
       const { data } = res
-      const wordOfWeek = `\n~今週の名言~\n“${data[0].meigen}”\n${data[0].author}`;
+      const wordOfWeek = `\n~今週の名言~\n\n“${data[0].meigen}”\n\n${data[0].auther}`;
       content += wordOfWeek;
       postText(destId, content);
   }).catch((e: AxiosError<{ error: string }>) => console.error(e));

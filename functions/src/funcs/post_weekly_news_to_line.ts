@@ -16,7 +16,9 @@ const db = admin.firestore();
 // Initialize LINE
 const lineConfig: LineConfig = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN ?? "",
-  channelSecret: process.env.CHANNEL_ACCESS_TOKEN ?? "",
+  channelSecret: process.env.CHANNEL_SECRET ?? "",
+
+  // 手動デプロイ用
   // channelAccessToken: functions.config().line_config.channel_access_token ?? "",
   // channelSecret: functions.config().line_config.channel_secret ?? "",
 };
