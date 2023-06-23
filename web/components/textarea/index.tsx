@@ -1,21 +1,29 @@
-import React, { useCallback } from "react";
-import {Textarea as  ChakraTextarea } from '@chakra-ui/react'
-
+import React, { useCallback } from 'react'
+import { Textarea as ChakraTextarea } from '@chakra-ui/react'
 
 export type Props = {
-  className?: string;
-  value?: string;
-  onChange?: (value: string) => void;
+  className?: string
+  value?: string
+  placeholder?: string
+  onChange?: (value: string) => void
 }
 
-const TextArea = ({ className, onChange, value }: Props) => {
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange?.(e.currentTarget.value)
-  }, [onChange])
-
-  return(
-    <ChakraTextarea placeholder="今週なにしたんだい？" onBlur={handleChange} value={value} onChange={handleChange}/>
+const TextArea = ({ className, onChange, value, placeholder }: Props) => {
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      onChange?.(e.currentTarget.value)
+    },
+    [onChange],
   )
-};
 
-export default TextArea;
+  return (
+    <ChakraTextarea
+      placeholder={placeholder}
+      onBlur={handleChange}
+      value={value}
+      onChange={handleChange}
+    />
+  )
+}
+
+export default TextArea
