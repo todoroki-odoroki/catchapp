@@ -9,6 +9,8 @@ import {
   doc,
   getDocs,
   getFirestore,
+  limit,
+  orderBy,
   query,
   setDoc,
   where,
@@ -73,7 +75,12 @@ const Ohgiri: NextPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const q = query(collection(db, 'ohgiri'), where('status', '==', 'waiting'))
+      const q = query(
+        collection(db, 'ohgiri'),
+        where('status', '==', 'waiting'),
+        orderBy('createdAt'),
+        limit(1),
+      )
       const querySnapshot = await getDocs(q)
 
       querySnapshot.forEach((doc) => {
