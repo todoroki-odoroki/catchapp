@@ -8,14 +8,24 @@ import {
   collection,
   doc,
   getDocs,
-  getFirestore,
   limit,
   orderBy,
   query,
   setDoc,
   where,
 } from 'firebase/firestore'
-import { Box, Button, Center, Flex, Link, Spinner, useToast } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Link,
+  Spinner,
+  useToast,
+  Switch,
+  FormLabel,
+  FormControl,
+} from '@chakra-ui/react'
 import TextArea from '../../components/textarea'
 
 type Ohgiri = {
@@ -33,27 +43,53 @@ type Answer = {
 }
 
 const Ohgiri: NextPage = () => {
+  // State Declarations
   const [ohgiriId, setOhgiriId] = useState('')
   const [ohgiri, setOhgiri] = useState<DocumentData | null>(null)
   const [content, setContent] = useState('')
   const [createdBy, setCreatedBy] = useState('川元')
   const [isLoading, setLoading] = useState(false)
+  const [isPostAnswer, setIsPostAnswer] = useState(true)
   const toast = useToast()
 
-  const postAnswer = async () => {
+  // Helper Functions
+  const createAnswer = () => {
+    return [...(ohgiri?.answers || []), { content, createdBy, createdAt: new Date(), score: 0 }]
+  }
+
+  const createQuestion = () => {
+    return { question: content, createdAt: new Date(), status: 'waiting', answers: [] }
+  }
+
+  const getChangeFunc = (value: string) => {
+    setContent(value)
+  }
+
+  const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCreatedBy(e.target.value)
+  }
+
+  const handleToggle = () => {
+    setIsPostAnswer(!isPostAnswer)
+  }
+
+  const postItem = async () => {
     setLoading(true)
+    console.log('updated1')
     try {
-      ohgiri?.answers.push({ content, createdBy, createdAt: new Date(), score: 0 })
-      const docRef = doc(db, 'ohgiri', ohgiriId)
-      await setDoc(docRef, ohgiri)
+      const updatedOhgiri = isPostAnswer ? { ...ohgiri, answers: createAnswer() } : createQuestion()
+
+      const docRef = isPostAnswer ? doc(db, 'ohgiri', ohgiriId) : doc(collection(db, 'ohgiri'))
+      await setDoc(docRef, updatedOhgiri)
       toast({
-        title: '回答を登録しました！',
+        title: '登録しました！',
         status: 'success',
         duration: 3000,
         isClosable: true,
       })
       setContent('')
     } catch (err: unknown) {
+      console.log(err)
       toast({
         title: 'エラーが発生しました',
         status: 'error',
@@ -63,14 +99,6 @@ const Ohgiri: NextPage = () => {
     } finally {
       setLoading(false)
     }
-  }
-
-  const getChangeFunc = (value: string) => {
-    setContent(value)
-  }
-
-  const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCreatedBy(e.target.value)
   }
 
   useEffect(() => {
@@ -102,13 +130,16 @@ const Ohgiri: NextPage = () => {
         <meta name='description' content='Share your life update!' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-
       <main className={styles.main}>
         <h1 className={styles.title}>今週の大喜利！</h1>
-        <p className={styles.description}>お題：{ohgiri?.question}</p>
+        {isPostAnswer && <p className={styles.description}>お題：{ohgiri?.question}</p>}
         <Box m={3}>
           <Flex justifyContent='center' gap={5} alignItems='center'>
-            <TextArea onChange={getChangeFunc} value={content} placeholder={'面白い答えをここに'} />
+            <TextArea
+              onChange={getChangeFunc}
+              value={content}
+              placeholder={isPostAnswer ? '面白い答えをここに' : '新しい大喜利のお題をここに'}
+            />
           </Flex>
         </Box>
         <select className={styles.card} onChange={handleChangeSelect}>
@@ -117,9 +148,15 @@ const Ohgiri: NextPage = () => {
           <option value='雷鳥'>雷鳥</option>
           <option value='鈴木'>鈴木</option>
         </select>
-        <Button onClick={postAnswer}>回答を登録！！</Button>
+        <Button onClick={postItem}>{isPostAnswer ? '回答を登録！！' : 'お題を登録'}</Button>
+        <FormControl display='flex' justifyContent='center' alignItems='center'>
+          <FormLabel fontSize='sm' mt='10'>
+            お題を新規追加する
+          </FormLabel>
+          <Switch isChecked={!isPostAnswer} onChange={handleToggle} size='sm' mt='8' />
+        </FormControl>
         <Link href='/' className={styles.link}>
-          <a>近況登録はこちら</a>
+          近況登録はこちら
         </Link>
       </main>
       <footer className={styles.footer}></footer>
