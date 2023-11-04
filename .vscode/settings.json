@@ -3,4 +3,5 @@
   "editor.formatOnSave": true,
   "eslint.workingDirectories": ["./functions"],
   "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
 }
