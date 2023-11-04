@@ -3,6 +3,8 @@ import * as functions from "firebase-functions";
 import * as line from "@line/bot-sdk";
 import { ImageMessage, Message } from "@line/bot-sdk";
 import { LineConfig } from "../types";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 type Asset = {
   createdBy?: string;
@@ -17,8 +19,6 @@ const db = admin.firestore();
 const lineConfig: LineConfig = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN ?? "",
   channelSecret: process.env.CHANNEL_ACCESS_TOKEN ?? "",
-  // channelAccessToken: functions.config().line_config.channel_access_token ?? "",
-  // channelSecret: functions.config().line_config.channel_secret ?? "",
 };
 const client = new line.Client(lineConfig);
 
@@ -32,7 +32,6 @@ export const postWeeklyNewsToLine = functions.pubsub
   .schedule("every Saturday 18:00")
   .timeZone("Asia/Tokyo")
   .onRun(async () => {
-
     const today = new Date();
     const oneWeekBefore = new Date();
     oneWeekBefore.setDate(today.getDate() - 7);
@@ -55,7 +54,7 @@ export const postWeeklyNewsToLine = functions.pubsub
       .then((snapshot) => {
         snapshot.forEach((doc) => {
           const data = doc.data();
-          content += `\n■${data.content}（${data.createdBy}）`;
+          content += `\n■${data.content} （${data.createdBy}）`;
         });
         postText(destId, content);
       })

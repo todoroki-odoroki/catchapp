@@ -75,10 +75,8 @@ const Ohgiri: NextPage = () => {
 
   const postItem = async () => {
     setLoading(true)
-    console.log('updated1')
     try {
       const updatedOhgiri = isPostAnswer ? { ...ohgiri, answers: createAnswer() } : createQuestion()
-
       const docRef = isPostAnswer ? doc(db, 'ohgiri', ohgiriId) : doc(collection(db, 'ohgiri'))
       await setDoc(docRef, updatedOhgiri)
       toast({
