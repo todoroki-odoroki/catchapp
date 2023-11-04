@@ -111,7 +111,7 @@ const Ohgiri: NextPage = () => {
 
       querySnapshot.forEach((doc) => {
         setOhgiriId(doc.id)
-        setOhgiri(doc.data())
+        setOhgiri(doc.data() as DocumentData)
       })
     }
     fetchData()
