@@ -30,6 +30,9 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: Install Firebase CLI
+        run: yarn add firebase-tools
+
       - name: Install deps and build (with cache)
         run: yarn install
 
