@@ -21,7 +21,7 @@ jobs:
         working-directory: ./web
     strategy:
       matrix:
-        node: ["16.x"]
+        node: ["18.x"]
         os: [ubuntu-latest]
 
     steps:
