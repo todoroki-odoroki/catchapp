@@ -89,7 +89,7 @@ const Ohgiri: NextPage = () => {
     } catch (err: unknown) {
       console.log(err)
       toast({
-        title: 'エラーが発生しました',
+        title: 'エラーが発生しました。',
         status: 'error',
         duration: 3000,
         isClosable: true,
