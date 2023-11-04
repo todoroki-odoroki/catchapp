@@ -1,4 +1,6 @@
 {
   "eslint.codeActionsOnSave.rules": null,
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "eslint.workingDirectories": ["./functions"],
+  "typescript.enablePromptUseWorkspaceTsdk": true,
 }

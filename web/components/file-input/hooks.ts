@@ -5,19 +5,19 @@ const maxFileSizeMB = 5
 type FileSizeUnit = 'bytes' | 'KB' | 'MB'
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default ({src, onSend}:{src?: string, onSend?: (file: File) => void}) => {
+export default ({ src, onSend }: { src?: string; onSend?: (file: File) => void }) => {
   const [imageUrl, setImageUrl] = React.useState(src)
   const hiddenFileInputRef = React.useRef<HTMLInputElement>(null)
-  const [file, setFile] = useState<File>();
+  const [file, setFile] = useState<File>()
 
-  const fileSizeByUnit = (size: number, unit: FileSizeUnit) => {
+  const fileSizeByUnit = (size: number, unit: FileSizeUnit): number => {
     switch (unit) {
       case 'bytes':
         return size
       case 'KB':
-        return (size / 1024).toFixed(1)
+        return parseFloat((size / 1024).toFixed(1))
       case 'MB':
-        return (size / 1048576).toFixed(1)
+        return parseFloat((size / 1048576).toFixed(1))
       default:
         return size
     }
@@ -45,19 +45,19 @@ export default ({src, onSend}:{src?: string, onSend?: (file: File) => void}) => 
     setFile(file)
     const reader = new FileReader()
     reader.readAsDataURL(file)
-    reader.onload =  () => {
+    reader.onload = () => {
       const dataUrl = reader.result
       if (!reader.result) return
-      if (!(typeof dataUrl === "string")) return
+      if (!(typeof dataUrl === 'string')) return
       setImageUrl(dataUrl)
     }
   }
 
-  const handleSend= useCallback(() => {
-    if(!file)return
-    onSend?.(file);
-    setFile(undefined);
-    setImageUrl("")
+  const handleSend = useCallback(() => {
+    if (!file) return
+    onSend?.(file)
+    setFile(undefined)
+    setImageUrl('')
   }, [file, onSend])
 
   const handleUploadAreaClick = () => {
@@ -68,12 +68,11 @@ export default ({src, onSend}:{src?: string, onSend?: (file: File) => void}) => 
     setImageUrl(src)
   }, [src])
 
-
   return {
     handleImageSet,
     imageUrl: imageUrl,
     handleUploadAreaClick,
     hiddenFileInput: hiddenFileInputRef,
-    handleSend
+    handleSend,
   }
 }
