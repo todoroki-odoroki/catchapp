@@ -18,7 +18,7 @@ jobs:
         working-directory: functions
     strategy:
       matrix:
-        node: ["18"]
+        node: ["18.x"]
         os: [ubuntu-latest]
 
     steps:
@@ -29,9 +29,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-
-      - name: Install Firebase CLI
-        run: yarn global add firebase-tools
 
       - name: Install deps and build (with cache)
         run: yarn install

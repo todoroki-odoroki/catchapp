@@ -12,7 +12,7 @@ jobs:
         working-directory: functions
     strategy:
       matrix:
-        node: ["18"]
+        node: ["18.x"]
         os: [ubuntu-latest]
     steps:
       - name: Checkout repo
@@ -23,13 +23,12 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Install deps and build (with cache)
+      - name: Install deps and build (with cache) ${{ matrix.node }}
         uses: bahmutov/npm-install@v1
         with:
           working-directory: functions
           useLockFile: false
-          clean: true
-      - name: deploy firebase functions
+      - name: deploy firebase functions ${{ matrix.node }}
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only functions
