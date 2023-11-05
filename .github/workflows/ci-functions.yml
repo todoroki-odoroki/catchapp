@@ -29,10 +29,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-          cache: "none"
 
       - name: Install Firebase CLI
-        run: yarn add firebase-tools
+        run: yarn global add firebase-tools
 
       - name: Install deps and build (with cache)
         run: yarn install
