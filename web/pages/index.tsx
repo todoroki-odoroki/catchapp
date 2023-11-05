@@ -95,7 +95,7 @@ const Home: NextPage = () => {
         const ref = doc(collection(db, 'files'))
         await setDoc(ref, fileData)
         toast({
-          title: 'ファイルアップデート成功',
+          title: 'ファイルアップデート成功!',
           status: 'success',
           duration: 3000,
           isClosable: true,
