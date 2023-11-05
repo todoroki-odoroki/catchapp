@@ -35,6 +35,6 @@ jobs:
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CATCHAPP_ED8DD }}
           CONFIG_VALUES: >
-            channel_access_token=${{ secrets.CHANNEL_ACCESS_TOKEN }}
-            channel_secret=${{ secrets.CHANNEL_SECRET }}
-            openapi_api_key=${{ secrets.OPENAI_API_KEY }}
+            ${{ secrets.CHANNEL_ACCESS_TOKEN }}
+            ${{ secrets.CHANNEL_SECRET }}
+            ${{ secrets.OPENAI_API_KEY }}
