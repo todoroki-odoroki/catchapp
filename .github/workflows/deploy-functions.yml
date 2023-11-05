@@ -12,7 +12,7 @@ jobs:
         working-directory: functions
     strategy:
       matrix:
-        node: ["18.x"]
+        node: ["18"]
         os: [ubuntu-latest]
     steps:
       - name: Checkout repo
