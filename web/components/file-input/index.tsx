@@ -7,20 +7,33 @@ export type Props = {
   onSend?: (file: File) => void
 }
 
-const FileInput = ({  onSend }: Props) => {
+const FileInput = ({ onSend }: Props) => {
   const {
     handleImageSet,
     imageUrl: imageUrl,
     handleUploadAreaClick,
     hiddenFileInput,
-    handleSend
-  } = useFileInput({onSend})
+    handleSend,
+  } = useFileInput({ onSend })
   return (
     <Box>
-      <Button onClick={handleUploadAreaClick}>ファイル添付！</Button>
-      <Input type='file' size='md' onClick={handleUploadAreaClick} ref={hiddenFileInput} onChange={handleImageSet} accept=".png, .jpg, .jpeg, .gif, .svg" multiple={false} display="none"/>
-      {imageUrl && <Image src={imageUrl} alt=""/>}
-      <Button onClick={handleSend}>ファイル送信！</Button>
+      <Button onClick={handleUploadAreaClick} m={2}>
+        写真添付！
+      </Button>
+      <Button onClick={handleSend} m={2}>
+        写真送信！
+      </Button>
+      <Input
+        type='file'
+        size='md'
+        onClick={handleUploadAreaClick}
+        ref={hiddenFileInput}
+        onChange={handleImageSet}
+        accept='.png, .jpg, .jpeg, .gif, .svg'
+        multiple={false}
+        display='none'
+      />
+      {imageUrl && <Image src={imageUrl} alt='' />}
     </Box>
   )
 }

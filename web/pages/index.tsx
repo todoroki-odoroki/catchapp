@@ -4,7 +4,7 @@ import React, { useCallback, useState } from 'react'
 import styles from '../styles/Home.module.css'
 import { db } from '../libs/firebase'
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
-import { getStorage, ref, uploadBytes } from 'firebase/storage'
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
 import { Box, Button, Center, Flex, IconButton, Spinner, Tooltip, useToast } from '@chakra-ui/react'
 import FileInput from '../components/file-input'
 import { getRandomStr } from '../libs/random'
@@ -24,6 +24,7 @@ const Home: NextPage = () => {
   const [contents, setContents] = useState<string[]>([''])
   const [createdBy, setCreatedBy] = useState('川元')
   const [isLoading, setLoading] = useState(false)
+  const [comment, setComment] = useState('')
   const storage = getStorage()
   const toast = useToast()
 
@@ -85,26 +86,29 @@ const Home: NextPage = () => {
       const assetsRef = ref(storage, `${ASSET_FOLDER_NAME}/${fileName}`)
 
       try {
-        const data = await uploadBytes(assetsRef, file, metaData)
+        const uploadResult = await uploadBytes(assetsRef, file, metaData)
+        const downloadUrl = await getDownloadURL(uploadResult.ref)
         const fileData = {
+          comment: comment,
           createdBy: createdBy,
-          createdAt: data.metadata.timeCreated,
-          mineType: data.metadata.contentType,
-          url: data.metadata.fullPath,
+          createdAt: new Date(),
+          mineType: uploadResult.metadata.contentType,
+          url: downloadUrl,
         }
         const ref = doc(collection(db, 'files'))
         await setDoc(ref, fileData)
         toast({
-          title: 'ファイルアップデート成功!',
+          title: '写真アップデート成功!',
           status: 'success',
           duration: 3000,
           isClosable: true,
         })
+        setComment('')
       } catch {
         toast({ title: 'Failed to upload file', status: 'error', duration: 3000, isClosable: true })
       }
     },
-    [createdBy, storage, toast],
+    [comment, createdBy, storage, toast],
   )
 
   return isLoading ? (
@@ -152,9 +156,13 @@ const Home: NextPage = () => {
           <option value='雷鳥'>雷鳥</option>
           <option value='鈴木'>鈴木</option>
         </select>
-        <Button onClick={postNews}>近況を登録！！</Button>
+        <Button onClick={postNews} m={5}>
+          近況を登録！！
+        </Button>
+        <h1>写真は下から登録してね</h1>
         <Box m={3}>
           <FileInput onSend={handleUploadFile} />
+          <TextArea onChange={setComment} value={comment} placeholder={'写真コメント'} />
         </Box>
         <Link href='/ohgiri'>
           <a>今週の大喜利はこちら</a>

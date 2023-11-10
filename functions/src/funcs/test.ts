@@ -1,9 +1,8 @@
 // import * as admin from "firebase-admin";
 // import * as functions from "firebase-functions";
 // import * as line from "@line/bot-sdk";
-// import { Message } from "@line/bot-sdk";
+// import { FlexCarousel, FlexMessage } from "@line/bot-sdk";
 // import { LineConfig } from "../types";
-// import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
 // import * as dotenv from "dotenv";
 // dotenv.config();
 
@@ -12,17 +11,9 @@
 // // Initialize LINE
 // const lineConfig: LineConfig = {
 //   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN ?? "",
-//   channelSecret: process.env.CHANNEL_ACCESS_TOKEN ?? "",
-//   //   channelAccessToken: functions.config().line_config.channel_access_token ?? "",
-//   //   channelSecret: functions.config().line_config.channel_secret ?? "",
+//   channelSecret: process.env.CHANNEL_SECRET ?? "",
 // };
 // const client = new line.Client(lineConfig);
-
-// // Initialise ChatGPT
-// const configuration = new Configuration({
-//   apiKey: process.env.OPENAI_API_KEY,
-// });
-// const openai = new OpenAIApi(configuration);
 
 // // Line id for testing (masaki's id)
 // const destId = "U0c76609bed3be74104df6a707d3791f0";
@@ -35,37 +26,25 @@
 //       send: (arg0: string) => void;
 //     }
 //   ) => {
-//     let ohgiriId = "";
-//     let content = "";
-//     let gptAnswer: string | undefined = "";
-
-//     const title = "😆大喜利結果発表！\n";
-//     content += title + "\n";
+//     const today = new Date();
+//     const oneWeekBefore = new Date();
+//     oneWeekBefore.setDate(today.getDate() - 7);
 
 //     try {
+//       const contents = [] as any[]; // Initialize an array to hold the content objects
+
 //       const snapshot = await db
-//         .collection("ohgiri")
-//         .where("status", "==", "waiting")
+//         .collection("files")
+//         .where("createdAt", ">", oneWeekBefore)
 //         .orderBy("createdAt")
-//         .limit(1)
 //         .get();
 
-//       await Promise.all(
-//         snapshot.docs.map(async (doc) => {
-//           ohgiriId = doc.id;
-//           const data = doc.data();
-//           content += `お題：${data.question}\n`;
-//           data.answers.forEach((answer: any) => {
-//             content += `\n「${answer.content}」\n`;
-//           });
-//           content += "\n🤖GPT大先生の評価\n\n";
-//           gptAnswer = await getGPTAnswer(data);
-//           content += gptAnswer;
-//         })
-//       );
+//       snapshot.forEach((doc) => {
+//         const content = getImages(doc.data());
+//         contents.push(content); // Push the content to the array
+//       });
 
-//       await postText(destId, content);
-//       await changeStatus(ohgiriId, gptAnswer);
+//       await postText(destId, contents);
 
 //       res.send("Function executed successfully");
 //     } catch (error) {
@@ -75,64 +54,116 @@
 //   }
 // );
 
-// const postText = async (destId: string, content: string) => {
-//   const message: Message = {
-//     type: "text",
-//     text: content,
+// const postText = async (destId: string, contents: any) => {
+//   const flexCarousel: FlexCarousel = {
+//     type: "carousel",
+//     contents: contents,
+//   };
+
+//   const flexMessage: FlexMessage = {
+//     type: "flex",
+//     altText: "Pictures",
+//     contents: flexCarousel,
 //   };
 
 //   try {
-//     await client.pushMessage(destId, message);
+//     await client.pushMessage(destId, flexMessage);
 //   } catch (error) {
 //     console.error("Error posting to LINE:", error);
 //     throw error;
 //   }
 // };
 
-// const changeStatus = async (ohgiriId: string, gptAnswer: string) => {
-//   try {
-//     await db
-//       .collection("ohgiri")
-//       .doc(ohgiriId)
-//       .update({ status: "completed", gptAnswer: gptAnswer });
-//   } catch (error) {
-//     console.error("Error updating status:", error);
-//     throw error;
-//   }
-// };
+// const getImages = (file: any) => {
+//   const content = {
+//     type: "bubble",
+//     hero: {
+//       type: "image",
+//       size: "full",
+//       aspectRatio: "20:13",
+//       aspectMode: "cover",
+//       url: file.url,
+//     },
+//     body: {
+//       type: "box",
+//       layout: "vertical",
+//       spacing: "sm",
+//       contents: [
+//         {
+//           type: "text",
+//           text: file.comment,
+//           wrap: true,
+//           weight: "bold",
+//           size: "lg",
+//         },
+//         {
+//           type: "box",
+//           layout: "baseline",
+//           contents: [
+//             {
+//               type: "text",
+//               text: file.createdBy,
+//               wrap: true,
+//               weight: "bold",
+//               size: "sm",
+//               flex: 0,
+//             },
+//           ],
+//         },
+//       ],
+//       justifyContent: "center",
+//     },
+//     footer: {
+//       type: "box",
+//       layout: "vertical",
+//       spacing: "sm",
+//       contents: [
+//         {
+//           type: "box",
+//           layout: "horizontal",
+//           contents: [
+//             {
+//               type: "button",
+//               action: {
+//                 type: "message",
+//                 label: "ええな",
+//                 text: `ええな\n>>${file.comment}`,
+//               },
+//               style: "primary",
+//             },
+//             {
+//               type: "button",
+//               action: {
+//                 type: "message",
+//                 label: "まじか",
+//                 text: `まじか\n>>${file.comment}`,
+//               },
+//               color: "#0f0f0f",
+//               style: "primary",
+//             },
+//             {
+//               type: "button",
+//               action: {
+//                 type: "message",
+//                 label: "ほざけ",
+//                 text: `ほざけ\n>>${file.comment}`,
+//               },
+//               style: "secondary",
+//             },
+//           ],
+//           spacing: "md",
+//         },
+//         {
+//           type: "button",
+//           action: {
+//             type: "uri",
+//             label: "感想を投稿する",
+//             uri: "https://catchapp-ed8dd.web.app/",
+//           },
+//         },
+//       ],
+//     },
+//   };
 
-// const getGPTAnswer = async (data: any) => {
-//   const instructions =
-//     "あなたは大喜利の採点者です。お題に対する回答に10点満点で点数をつけてください。理由も教えてください。\n";
-//   const topic = `#お題\n${data.question}`;
-//   const system = instructions + topic;
-//   let content = "#回答\n";
-//   data.answers.forEach((answer: any, index: number) => {
-//     content += `${index + 1}.${answer.content}\n\n`;
-//   });
-
-//   // ChatGPTに投げるメッセージ
-//   const messages: ChatCompletionRequestMessage[] = [
-//     { role: "system", content: system },
-//     { role: "user", content: content },
-//   ];
-
-//   const model = "gpt-3.5-turbo";
-//   const maxTokens = 256;
-
-//   try {
-//     const response = await openai.createChatCompletion({
-//       model: model,
-//       messages: messages,
-//       max_tokens: maxTokens,
-//     });
-
-//     const answer = response.data.choices[0].message?.content;
-//     console.log(answer);
-
-//     return answer;
-//   } catch (error) {
-//     console.error("Error calling ChatGPT API:", error);
-//     throw error;
-//   }
+//   return content;
 // };
