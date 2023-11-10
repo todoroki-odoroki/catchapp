@@ -33,5 +33,5 @@ jobs:
         with:
           args: deploy --only functions
         env:
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CATCHAPP_ED8DD }}
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
           CONFIG_VALUES: ${{ secrets.CONFIG_VALUES}}

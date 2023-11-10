@@ -44,7 +44,7 @@ export const postWeeklyPicturesToLine = functions.pubsub
 
       return null;
     } catch (e) {
-      console.error("Error:", e);
+      console.error("Error: ", e);
       return null;
     }
   });
