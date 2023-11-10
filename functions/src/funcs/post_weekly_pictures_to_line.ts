@@ -27,7 +27,7 @@ export const postWeeklyPicturesToLine = functions.pubsub
     oneWeekBefore.setDate(today.getDate() - 7);
 
     try {
-      const contents = [] as any[]; // Initialize an array to hold the content objects
+      const contents = [] as any[];
 
       const snapshot = await db
         .collection("files")
@@ -37,7 +37,7 @@ export const postWeeklyPicturesToLine = functions.pubsub
 
       snapshot.forEach((doc) => {
         const content = getImages(doc.data());
-        contents.push(content); // Push the content to the array
+        contents.push(content);
       });
 
       await postText(destId, contents);
