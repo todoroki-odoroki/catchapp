@@ -44,7 +44,7 @@ export const postWeeklyPicturesToLine = functions.pubsub
 
       return null;
     } catch (e) {
-      console.error("Error:", e);
+      console.error("Error: ", e);
       return null;
     }
   });
@@ -150,7 +150,7 @@ const postText = async (destId: string, contents: any) => {
 
   const flexMessage: FlexMessage = {
     type: "flex",
-    altText: "Pictures",
+    altText: "Posted Pictures",
     contents: flexCarousel,
   };
 
