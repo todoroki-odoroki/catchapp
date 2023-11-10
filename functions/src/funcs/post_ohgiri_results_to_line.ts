@@ -60,8 +60,8 @@ export const postOhgiriResultsToLine = functions.pubsub
 
       await postText(destId, content);
       await changeStatus(ohgiriId, gptAnswer);
-    } catch (error) {
-      console.error("Error:", error);
+    } catch (e) {
+      console.error("Error:", e);
     }
     return null;
   });
