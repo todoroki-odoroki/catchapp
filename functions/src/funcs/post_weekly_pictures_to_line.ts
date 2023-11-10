@@ -43,8 +43,8 @@ export const postWeeklyPicturesToLine = functions.pubsub
       await postText(destId, contents);
 
       return null;
-    } catch (error) {
-      console.error("Error:", error);
+    } catch (e) {
+      console.error("Error:", e);
       return null;
     }
   });
