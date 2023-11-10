@@ -150,7 +150,7 @@ const postText = async (destId: string, contents: any) => {
 
   const flexMessage: FlexMessage = {
     type: "flex",
-    altText: "Pictures",
+    altText: "Posted Pictures",
     contents: flexCarousel,
   };
 
