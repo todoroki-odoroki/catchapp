@@ -156,8 +156,8 @@ const postText = async (destId: string, contents: any) => {
 
   try {
     await client.pushMessage(destId, flexMessage);
-  } catch (error) {
-    console.error("Error posting to LINE:", error);
-    throw error;
+  } catch (e) {
+    console.error("Error posting to LINE:", e);
+    throw e;
   }
 };
