@@ -60,8 +60,8 @@ export const postOhgiriResultsToLine = functions.pubsub
 
       await postText(destId, content);
       await changeStatus(ohgiriId, gptAnswer);
-    } catch (error) {
-      console.error("Error:", error);
+    } catch (e) {
+      console.error("Error:", e);
     }
     return null;
   });
@@ -94,7 +94,7 @@ const changeStatus = async (ohgiriId: string, gptAnswer: string) => {
 
 const getGPTAnswer = async (data: any) => {
   const instructions =
-    "あなたは大喜利の採点者です。面白さ・創造力・テーマへの適応性を考慮して、お題に対する各回答に10点満点で点数をつけてください。点数の理由も簡潔に教えてください。\n";
+    "あなたは大喜利の採点者です。お題に対する各回答に10点満点(10=とても面白い)で点数をつけてください。点数の理由も簡潔に教えてください。アニメキャラクターを一つ選んで、そのキャラの口調で話してください。\n";
   const topic = `#お題\n${data.question}`;
   const system = instructions + topic;
   let content = "#回答\n";

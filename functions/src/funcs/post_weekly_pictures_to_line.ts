@@ -27,7 +27,7 @@ export const postWeeklyPicturesToLine = functions.pubsub
     oneWeekBefore.setDate(today.getDate() - 7);
 
     try {
-      const contents = [] as any[]; // Initialize an array to hold the content objects
+      const contents = [] as any[];
 
       const snapshot = await db
         .collection("files")
@@ -37,14 +37,14 @@ export const postWeeklyPicturesToLine = functions.pubsub
 
       snapshot.forEach((doc) => {
         const content = getImages(doc.data());
-        contents.push(content); // Push the content to the array
+        contents.push(content);
       });
 
       await postText(destId, contents);
 
       return null;
-    } catch (error) {
-      console.error("Error:", error);
+    } catch (e) {
+      console.error("Error:", e);
       return null;
     }
   });
@@ -156,8 +156,8 @@ const postText = async (destId: string, contents: any) => {
 
   try {
     await client.pushMessage(destId, flexMessage);
-  } catch (error) {
-    console.error("Error posting to LINE:", error);
-    throw error;
+  } catch (e) {
+    console.error("Error posting to LINE:", e);
+    throw e;
   }
 };

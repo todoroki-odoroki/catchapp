@@ -34,7 +34,4 @@ jobs:
           args: deploy --only functions
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CATCHAPP_ED8DD }}
-          CONFIG_VALUES: |
-            ${{ secrets.CHANNEL_ACCESS_TOKEN }}
-            ${{ secrets.CHANNEL_SECRET }}
-            ${{ secrets.OPENAI_API_KEY }}
+          CONFIG_VALUES: ${{ secrets.CONFIG_VALUES}}

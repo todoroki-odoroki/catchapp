@@ -25,9 +25,6 @@ const client = new line.Client(lineConfig);
 // Line Talk Room Id
 const destId = "C5481f05c1b97a17a5cecc6c321d1b6d6";
 
-// Line id for testing (masaki's id)
-// const destId = "U0c76609bed3be74104df6a707d3791f0";
-
 export const postWeeklyNewsToLine = functions.pubsub
   .schedule("every Saturday 18:00")
   .timeZone("Asia/Tokyo")
