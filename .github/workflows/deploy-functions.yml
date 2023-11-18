@@ -31,7 +31,7 @@ jobs:
       - name: deploy firebase functions
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only functions
+          args: deploy --only functions --debug
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
           CONFIG_VALUES: ${{ secrets.CONFIG_VALUES}}

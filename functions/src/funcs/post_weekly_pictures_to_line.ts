@@ -19,7 +19,7 @@ const client = new line.Client(lineConfig);
 const destId = "C5481f05c1b97a17a5cecc6c321d1b6d6";
 
 export const postWeeklyPicturesToLine = functions.pubsub
-  .schedule("every Saturday 18:01")
+  .schedule("every Saturday 18:02")
   .timeZone("Asia/Tokyo")
   .onRun(async () => {
     const today = new Date();
