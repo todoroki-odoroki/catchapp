@@ -27,6 +27,7 @@ jobs:
         uses: bahmutov/npm-install@v1
         with:
           working-directory: functions
+          useLockFile: false
 
       - name: deploy firebase functions
         uses: w9jds/firebase-action@master
