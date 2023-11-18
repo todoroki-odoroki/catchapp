@@ -11,14 +11,14 @@ const db = admin.firestore();
 
 // Initialize LINE
 const lineConfig: LineConfig = {
-  channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN ?? "",
-  channelSecret: process.env.LINE_CHANNEL_SECRET ?? "",
+  channelAccessToken: functions.config().LINE_CHANNEL_ACCESS_TOKEN ?? "",
+  channelSecret: functions.config().LINE_CHANNEL_SECRET ?? "",
 };
 const client = new line.Client(lineConfig);
 
 // Initialise ChatGPT
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: functions.config().OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
