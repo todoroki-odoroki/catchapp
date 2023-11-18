@@ -21,7 +21,7 @@ export const postReminderToLine = functions.pubsub
   .timeZone("Asia/Tokyo")
   .onRun(async () => {
     let content = "";
-    const title = "近況登録リマインド📢\n明日の18:00までに登録してね";
+    const title = "近況登録リマインド📢\n明日の18:00までに登録してね!";
     const webAppUrl = "https://catchapp-ed8dd.web.app/\n";
     content += title + webAppUrl;
 

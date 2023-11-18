@@ -28,10 +28,14 @@ jobs:
         with:
           working-directory: functions
           useLockFile: false
+
+      - name: Set Yarn Version to Berry
+        run: yarn set version berry
+
       - name: deploy firebase functions
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only functions --debug
+          args: deploy --only functions
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
           CONFIG_VALUES: ${{ secrets.CONFIG_VALUES}}
