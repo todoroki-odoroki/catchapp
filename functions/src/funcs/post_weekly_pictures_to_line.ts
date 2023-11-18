@@ -10,8 +10,8 @@ const db = admin.firestore();
 
 // Initialize LINE
 const lineConfig: LineConfig = {
-  channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN ?? "",
-  channelSecret: process.env.CHANNEL_SECRET ?? "",
+  channelAccessToken: functions.config().line.channel_access_token ?? "",
+  channelSecret: functions.config().line.channel_secret ?? "",
 };
 const client = new line.Client(lineConfig);
 
