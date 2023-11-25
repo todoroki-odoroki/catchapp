@@ -27,6 +27,7 @@ import {
   FormControl,
 } from '@chakra-ui/react'
 import TextArea from '../../components/textarea'
+import RadioButton from '../../components/radio-button'
 
 type Ohgiri = {
   question: string
@@ -63,10 +64,6 @@ const Ohgiri: NextPage = () => {
 
   const getChangeFunc = (value: string) => {
     setContent(value)
-  }
-
-  const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCreatedBy(e.target.value)
   }
 
   const handleToggle = () => {
@@ -128,9 +125,15 @@ const Ohgiri: NextPage = () => {
         <meta name='description' content='Share your life update!' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
+      <header className={styles.header}>
+        <h1>Give Us Funny Moments by CatchApp</h1>
+      </header>
       <main className={styles.main}>
         <h1 className={styles.title}>今週の大喜利！</h1>
-        {isPostAnswer && <p className={styles.description}>お題：{ohgiri?.question}</p>}
+        <Box mx={5}>
+          {' '}
+          {isPostAnswer && <p className={styles.description}>お題：{ohgiri?.question}</p>}
+        </Box>
         <Box m={3}>
           <Flex justifyContent='center' gap={5} alignItems='center'>
             <TextArea
@@ -140,12 +143,13 @@ const Ohgiri: NextPage = () => {
             />
           </Flex>
         </Box>
-        <select className={styles.card} onChange={handleChangeSelect}>
-          <option value='川元'>川元</option>
-          <option value='馬場'>馬場</option>
-          <option value='雷鳥'>雷鳥</option>
-          <option value='鈴木'>鈴木</option>
-        </select>
+        <Box m={5}>
+          <RadioButton
+            options={['川元', '馬場', '雷鳥', '鈴木']}
+            onChange={(value: string) => setCreatedBy(value)}
+            selectedOption={createdBy}
+          />
+        </Box>
         <Button onClick={postItem}>{isPostAnswer ? '回答を登録！！' : 'お題を登録'}</Button>
         <FormControl display='flex' justifyContent='center' alignItems='center'>
           <FormLabel fontSize='sm' mt='10'>
@@ -157,7 +161,9 @@ const Ohgiri: NextPage = () => {
           近況登録はこちら
         </Link>
       </main>
-      <footer className={styles.footer}></footer>
+      <footer className={styles.footer}>
+        <p>&copy; 2023 CatchApp</p>
+      </footer>
     </div>
   )
 }

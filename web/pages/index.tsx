@@ -5,12 +5,23 @@ import styles from '../styles/Home.module.css'
 import { db } from '../libs/firebase'
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore'
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
-import { Box, Button, Center, Flex, IconButton, Spinner, Tooltip, useToast } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  IconButton,
+  Spinner,
+  Tooltip,
+  useToast,
+  Image,
+} from '@chakra-ui/react'
 import FileInput from '../components/file-input'
 import { getRandomStr } from '../libs/random'
 import TextArea from '../components/textarea'
 import { AddIcon, CopyIcon } from '@chakra-ui/icons'
 import Link from 'next/link'
+import RadioButton from '../components/radio-button'
 
 const ASSET_FOLDER_NAME = 'assets'
 
@@ -61,10 +72,6 @@ const Home: NextPage = () => {
     return (val: string) => {
       setContents((old) => old.map((c, index) => (index === i ? val : c)))
     }
-  }
-
-  const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCreatedBy(e.target.value)
   }
 
   const getPasteClipboardFunc = (i: number) => {
@@ -122,8 +129,11 @@ const Home: NextPage = () => {
         <meta name='description' content='Share your life update!' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-
+      <header className={styles.header}>
+        <h1>Keep Us Updated by CatchApp</h1>
+      </header>
       <main className={styles.main}>
+        <Image src='/assets/roy.png' alt='' className={styles.img} />
         <h1 className={styles.title}>近況教えて！</h1>
         <Box>
           {contents.map((c, i) => {
@@ -150,12 +160,13 @@ const Home: NextPage = () => {
         <Tooltip label='新規コンテンツ'>
           <IconButton aria-label='add textarea' icon={<AddIcon />} onClick={addContent} />
         </Tooltip>
-        <select className={styles.card} onChange={handleChangeSelect}>
-          <option value='川元'>川元</option>
-          <option value='馬場'>馬場</option>
-          <option value='雷鳥'>雷鳥</option>
-          <option value='鈴木'>鈴木</option>
-        </select>
+        <Box mt={5}>
+          <RadioButton
+            options={['川元', '馬場', '雷鳥', '鈴木']}
+            onChange={(value: string) => setCreatedBy(value)}
+            selectedOption={createdBy}
+          />
+        </Box>
         <Button onClick={postNews} m={5}>
           近況を登録！！
         </Button>
@@ -168,7 +179,9 @@ const Home: NextPage = () => {
           <a>今週の大喜利はこちら</a>
         </Link>
       </main>
-      <footer className={styles.footer}></footer>
+      <footer className={styles.footer}>
+        <p>&copy; 2023 CatchApp</p>
+      </footer>
     </div>
   )
 }
