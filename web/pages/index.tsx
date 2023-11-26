@@ -160,7 +160,7 @@ const Home: NextPage = () => {
         <Tooltip label='新規コンテンツ'>
           <IconButton aria-label='add textarea' icon={<AddIcon />} onClick={addContent} />
         </Tooltip>
-        <Box mt={5}>
+        <Box mt={5} style={{ zIndex: 2 }}>
           <RadioButton
             options={['川元', '馬場', '雷鳥', '鈴木']}
             onChange={(value: string) => setCreatedBy(value)}
